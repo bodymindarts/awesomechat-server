@@ -1,8 +1,10 @@
 source 'https://rubygems.org'
 
 gem 'em-websocket'
-gem 'redis'
+gem 'em-hiredis'
+gem 'oj'
 
 group :development do
   gem 'rspec'
+  gem 'redis'
 end

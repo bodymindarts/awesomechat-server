@@ -1,4 +1,4 @@
-require_relative '../lib/client_list.rb'
+require_relative '../lib/client_list'
 
 RSpec.describe ClientList do
   it 'broadcasts to multiple clients' do

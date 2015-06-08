@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+$: << File.expand_path('../lib', __dir__)
+
+require 'bundler/setup'
+require 'chat_server.rb'
+
+EM.run do
+  ChatServer.new(host: '0.0.0.0', port: 10000).run
+end
