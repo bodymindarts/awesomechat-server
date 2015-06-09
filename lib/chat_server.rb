@@ -1,5 +1,5 @@
 require 'em-websocket'
-require 'em-hiredis'
+require 'redis'
 require_relative 'message_store'
 require_relative 'chat_room'
 
@@ -8,7 +8,7 @@ class ChatServer
     @host = host
     @port = port
     @clients = []
-    @storage = MessageStore.new(EM::Hiredis.connect)
+    @storage = MessageStore.new(Redis.connect)
     @chat_room = ChatRoom.new('default', @storage)
   end
 
