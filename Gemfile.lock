@@ -2,14 +2,10 @@ GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.2.5)
-    em-hiredis (0.3.0)
-      eventmachine (~> 1.0)
-      hiredis (~> 0.5.0)
     em-websocket (0.5.1)
       eventmachine (>= 0.12.9)
       http_parser.rb (~> 0.6.0)
     eventmachine (1.0.7)
-    hiredis (0.5.2)
     http_parser.rb (0.6.0)
     oj (2.12.9)
     redis (3.2.1)
@@ -31,7 +27,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  em-hiredis
   em-websocket
   oj
   redis
