@@ -21,6 +21,7 @@ RSpec.describe MessageStore do
     @redis.zrange("#{room}:history", 0, -1).map do |id|
       @redis.del(id)
     end
+
     @redis.del("#{room}:history")
   end
 
@@ -34,6 +35,7 @@ RSpec.describe MessageStore do
   it 'stores messages in an ordered set' do
     subject.store_message(room, high_message)
     subject.store_message(room, low_message)
+
     expect(@redis.zrange("#{room}:history", 0, 1)).
       to eq(['120-id', '240-id'])
   end
@@ -46,6 +48,7 @@ RSpec.describe MessageStore do
   it 'can retreive all messages' do
     subject.store_message(room, high_message)
     subject.store_message(room, low_message)
+
     expect(subject.all(room)).to eq([low_message, high_message]);
   end
 end

@@ -10,12 +10,15 @@ class ChatRoom
 
   def add_connection(connection)
     @clients.add_client(connection)
+
     connection.onopen do
       sync_history(connection)
     end
+
     connection.onclose do
       @clients.remove_client(connection)
     end
+
     connection.onmessage do |message|
       handle_message(message)
     end
@@ -24,12 +27,11 @@ class ChatRoom
   private
 
   def handle_message(message_string)
-    message = Oj.load(message_string)
-    return if @storage.contains? message
+    return if @storage.contains? message = Oj.load(message_string)
 
     message['pending'] = false
-
     raw_message = @storage.store_message(@room_name, message)
+
     @clients.broadcast(raw_message)
   end
 

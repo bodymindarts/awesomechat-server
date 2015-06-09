@@ -7,6 +7,7 @@ class MessageStore
 
   def store_message(room_name, message)
     raw_message = Oj.dump(message)
+
     @redis.set(message['id'], raw_message)
     @redis.zadd(room_history_key(room_name), message['score'], message['id'])
     raw_message

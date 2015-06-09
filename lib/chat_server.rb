@@ -8,7 +8,7 @@ class ChatServer
     @host = host
     @port = port
     @clients = []
-    @storage = MessageStore.new(Redis.connect)
+    @storage = MessageStore.new(Redis.new)
     @chat_room = ChatRoom.new('default', @storage)
   end
 
