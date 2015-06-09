@@ -4,7 +4,7 @@ This is the server for the AwesomeChat chat application. It was developed and te
 ## Setup
 `git clone https://github.com/bodymindarts/awesomechat-server.git`
 
-`cd awsomechat-server`
+`cd awesomechat-server`
 
 `bundle install`
 
