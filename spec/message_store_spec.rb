@@ -4,10 +4,10 @@ require_relative '../lib/message_store'
 
 RSpec.describe MessageStore do
   let(:low_message) do
-    { 'id' => 'low_key', 'score' => '120' }
+    { 'id' => '120-id', 'score' => '120' }
   end
   let(:high_message) do
-    { 'id' => 'high_key', 'score' => '240' }
+    { 'id' => '240-id', 'score' => '240' }
   end
   let(:low_json) { Oj.dump(low_message) }
   let(:high_json) { Oj.dump(high_message) }
@@ -18,36 +18,34 @@ RSpec.describe MessageStore do
   end
 
   after do
+    @redis.zrange("#{room}:history", 0, -1).map do |id|
+      @redis.del(id)
+    end
     @redis.del("#{room}:history")
   end
 
   subject { MessageStore.new(@redis) }
 
-  it 'stores raw messages with their id as key' do
-    message = { 'id' => 'unique_id', 'score' => 0 }
-    subject.store_message(room, message, 'MESSAGE')
-    expect(@redis.get('unique_id')).to eq 'MESSAGE'
-    @redis.del('unique_id')
+  it 'stores messages by id as json and returns the json' do
+    expect(subject.store_message(room, low_message)).to eq low_json
+    expect(@redis.get('120-id')).to eq low_json
   end
 
   it 'stores messages in an ordered set' do
-    subject.store_message(room, high_message, 'HIGH')
-    subject.store_message(room, low_message, 'LOW')
-
-    expect(@redis.zrevrange('testdefault:history', 0, 1)).
-      to eq(['high_key', 'low_key'])
+    subject.store_message(room, high_message)
+    subject.store_message(room, low_message)
+    expect(@redis.zrange("#{room}:history", 0, 1)).
+      to eq(['120-id', '240-id'])
   end
 
   it 'knows if it contains a message' do
-    message = { 'id' => 'unique_id', 'score' => 0 }
-    subject.store_message(room, message, 'MESSAGE')
-    expect(subject.contains?(message)).to eq true
-    @redis.del('unique_id')
+    subject.store_message(room, low_message)
+    expect(subject.contains?(low_message)).to eq true
   end
 
   it 'can retreive all messages' do
-    subject.store_message(room, high_message, low_json)
-    subject.store_message(room, low_message, high_json)
-    expect(subject.all(room)).to eq("[#{low_json}, #{high_json}]");
+    subject.store_message(room, high_message)
+    subject.store_message(room, low_message)
+    expect(subject.all(room)).to eq([low_message, high_message]);
   end
 end
